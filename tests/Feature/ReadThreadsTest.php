@@ -15,7 +15,7 @@ class ReadThreadsTest extends TestCase
     {
     	parent::setUp();
 
-    	$this->thread = factory('App\Thread')->create();
+    	$this->thread = create('App\Thread');
     }
 
     public function test_a_user_can_view_all_threads()
@@ -34,8 +34,7 @@ class ReadThreadsTest extends TestCase
     {
     	// 如果有 Thread
     	// 并且该 Thread 有回复
-    	$reply = factory('App\Reply')
-    	    ->create(['thread_id' => $this->thread->id]);
+    	$reply = create('App\Reply', ['thread_id' => $this->thread->id]);
     	// 那么当我们看 Thread 时
     	// 我们也要看到回复
     	$this->get($this->thread->path())
