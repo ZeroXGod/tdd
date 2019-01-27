@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <a href="#">{{ $thread->creator->name }}</a>发表了：
@@ -14,32 +14,39 @@
                         {{ $thread->body }}
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
                 @foreach ($thread->replies as $reply)
                     @include('threads.reply')
                 @endforeach
-            </div>
-        </div>  
 
-        @if (auth()->check()) 
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <form action="{{ $thread->path() . '/replies' }}" method="post">
-                        {{ csrf_field() }}
-                        <div class="form-group">
-                            <textarea name="body" id="body" placeholder="说点什么吧..." rows="5" class="form-control"></textarea>
+                {{ $replies->links() }}
+
+                @if (auth()->check()) 
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            <form action="{{ $thread->path() . '/replies' }}" method="post">
+                                {{ csrf_field() }}
+                                <div class="form-group">
+                                    <textarea name="body" id="body" placeholder="说点什么吧..." rows="5" class="form-control"></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-default">提交</button>
+                            </form>
                         </div>
-
-                        <button type="submit" class="btn btn-default">提交</button>
-                    </form>
+                    </div>
+                @else
+                    <p>请先<a href="{{ route('login') }}">登录</a>,然后再发表回复</p>
+                @endif
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <p>
+                            <a href="#">{{ $thread->creator->name }}</a> 发布于 {{ $thread->created_at->diffForHumans() }},当前共有 {{ $thread->replies_count }} 个回复。
+                        </p>
+                    </div>
                 </div>
             </div>
-        @else
-            <p>请先<a href="{{ route('login') }}">登录</a>,然后再发表回复</p>
-        @endif
+        </div>
     </div>
 @endsection
